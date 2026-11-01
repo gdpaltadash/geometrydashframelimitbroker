@@ -1,25 +1,28 @@
 # FPS Unlocker (Geode, GD 2.2081, Windows)
 
-Quita el limite de 240 FPS y suaviza el render por encima de 240 FPS sin tocar la fisica (240 TPS).
-Pensado para usarse junto con Click Between Frames.
+Quita el limite de 240 FPS del juego sin tocar los 240 TPS nativos de la fisica.
 
 ## Como funciona
-1. **FPS**: hookea `CCDisplayLinkDirector::setAnimationInterval` y usa `1 / FPS objetivo`.
-2. **Suavizado**: la fisica de GD avanza en pasos fijos de 1/240 s. Con mas de 240 FPS hay frames sin paso de
-   fisica. En esos frames solo se mueve la posicion *visual* del jugador y de la camara entre los dos ultimos
-   pasos reales (interpolar) o prediciendo hacia adelante (extrapolar). Justo antes del siguiente
-   `GJBaseGameLayer::update` se restauran las posiciones reales, asi la fisica, las colisiones y otros mods
-   (como CBF) siempre ven los valores reales.
+Hookea `CCDisplayLinkDirector::setAnimationInterval` y sustituye el intervalo que pide
+el juego por `1 / FPS objetivo`. No modifica ninguna posicion, dt ni paso de fisica:
+GD ya acumula sus pasos de fisica en 1/240s dentro de `GJBaseGameLayer::update` sin
+importar cuantos FPS tenga el render, asi que esto basta para lograr mas FPS visuales
+sin alterar la fisica, y es compatible con mods como Click Between Frames.
+
+## Version anterior (v1.1.0)
+Esa version incluia una opcion de "suavizado" que interpolaba visualmente al jugador
+y la camara entre pasos de fisica para los frames por encima de 240 FPS. Se quito
+porque dependia de un campo de memoria (`m_extraDelta`) cuyo significado exacto no se
+pudo verificar sin depurar el juego en vivo, y en la practica rompia el juego
+(movimiento erratico). No se va a volver a agregar sin poder probarla primero.
 
 ## Opciones
-En los ajustes del mod (y el interruptor tambien esta en el menu de pausa, abajo a la izquierda):
+En los ajustes del mod (Geode) o desde el boton con el engranaje en el menu de pausa:
 - Activar FPS Unlocker (al desactivarlo se restaura el limite original del juego)
 - FPS objetivo (60 - 10000)
-- Suavizar frames sobre 240 FPS
-- Modo: Interpolar (exacto, hasta 4.2 ms de retraso visual) / Extrapolar (sin retraso, puede errar en saltos y clicks)
 
 ## Compilar
-Usa **Geode SDK v5.x** (el que soporta 2.2081; v5.11.2 probado contra los bindings).
+Usa **Geode SDK v5.11.2** (version con la que esta probado mod.json; es la que soporta 2.2081).
 
 ```
 geode sdk install        # una vez
@@ -31,9 +34,9 @@ geode build
 El resultado queda en `build/tuusuario.fps-unlocker.geode`. Copialo a `Geometry Dash/geode/mods/`.
 Antes de compilar cambia `developer`/`id` en `mod.json` si quieres.
 
-## Limitaciones conocidas
-- Solo se suavizan jugador 1/2 y la capa de objetos (camara). Fondo/suelo parallax, triggers de movimiento y
-  objetos animados siguen a 240 Hz.
-- No se suaviza durante muerte, saltos grandes de posicion (portales de teletransporte) ni con menos de 240 FPS.
-- Si `m_extraDelta` no tiene el significado esperado, el suavizado se omite y se escribe un aviso en el log de Geode.
-- Con V-Sync activo el limite lo pone el monitor: desactivalo para ver FPS altos.
+Para compilar en GitHub Actions usa el workflow en `.github/workflows/build.yml`
+(pestana Actions -> Run workflow -> descargar el artifact "Build Output").
+
+## Notas
+- Si el contador no sube, desactiva V-Sync en las opciones del juego y en el panel de tu GPU.
+- Tu monitor no mostrara mas Hz de los que tiene; el contador sube segun lo que aguanten tu CPU/GPU.
