@@ -5,28 +5,36 @@
 	},
 	"id": "tuusuario.fps-unlocker",
 	"name": "FPS Unlocker",
-	"version": "v1.2.0",
+	"version": "v1.3.0",
 	"developer": "tuusuario",
-	"description": "Rompe el limite de 240 FPS del juego sin alterar los 240 TPS nativos de la fisica.",
+	"description": "Rompe el limite de 240 FPS y muestra al jugador fluido a tu FPS real, con la fisica intacta a 240 TPS.",
 	"settings": {
 		"unlock-fps": {
 			"type": "bool",
 			"name": "Activar FPS Unlocker",
-			"description": "Activa o desactiva el mod. Tambien se puede cambiar desde el boton del menu de pausa. Al desactivarlo se restaura el limite de FPS original del juego.",
+			"description": "Al desactivarlo se restaura el limite de FPS original del juego.",
 			"default": true
 		},
 		"target-fps": {
 			"type": "int",
 			"name": "FPS objetivo",
-			"description": "FPS a los que corre el render. La fisica del juego sigue corriendo a sus 240 TPS nativos, esto no la afecta.",
+			"description": "FPS a los que corre el render. La fisica sigue a 240 TPS nativos.",
 			"default": 480,
 			"min": 60,
 			"max": 10000,
-			"control": {
-				"input": true,
-				"slider": true,
-				"arrows": true
-			}
+			"control": { "input": true, "slider": true, "arrows": true }
+		},
+		"interpolate": {
+			"type": "bool",
+			"name": "Interpolar jugador y camara",
+			"description": "Dibuja al jugador y la camara en posiciones intermedias entre pasos de fisica, solo visual. No modifica la fisica.",
+			"default": true
+		},
+		"debug-log": {
+			"type": "bool",
+			"name": "Log de depuracion",
+			"description": "Imprime en la consola de Geode datos de sincronizacion (1 linea por segundo aprox).",
+			"default": false
 		}
 	}
 }
