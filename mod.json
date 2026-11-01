@@ -1,0 +1,45 @@
+{
+	"geode": "5.0.0",
+	"gd": {
+		"win": "2.2081"
+	},
+	"id": "tuusuario.fps-unlocker",
+	"name": "FPS Unlocker",
+	"version": "v1.1.0",
+	"developer": "tuusuario",
+	"description": "Rompe el limite de 240 FPS y suaviza el render por encima de 240 FPS sin tocar los 240 TPS de la fisica.",
+	"settings": {
+		"unlock-fps": {
+			"type": "bool",
+			"name": "Activar FPS Unlocker",
+			"description": "Activa o desactiva el mod. Tambien se puede cambiar desde el menu de pausa. Al desactivarlo se restaura el limite de FPS que tenia el juego.",
+			"default": true
+		},
+		"target-fps": {
+			"type": "int",
+			"name": "FPS objetivo",
+			"description": "FPS a los que corre el render. La fisica sigue a 240 TPS.",
+			"default": 480,
+			"min": 60,
+			"max": 10000,
+			"control": {
+				"input": true,
+				"slider": true,
+				"arrows": true
+			}
+		},
+		"smoothing": {
+			"type": "bool",
+			"name": "Suavizar frames sobre 240 FPS",
+			"description": "Genera frames intermedios del jugador y la camara entre pasos de fisica. Es solo visual: no modifica la fisica ni las colisiones.",
+			"default": true
+		},
+		"smoothing-mode": {
+			"type": "string",
+			"name": "Modo de suavizado",
+			"description": "<cy>Interpolar</c>: exacto, nunca se pasa de la posicion real; agrega hasta 1 paso (4.2 ms) de retraso visual. <cy>Extrapolar</c>: predice hacia adelante sin retraso, pero puede errar en el instante de un salto o un click.",
+			"default": "Interpolar",
+			"one-of": ["Interpolar", "Extrapolar"]
+		}
+	}
+}
